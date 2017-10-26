@@ -197,9 +197,6 @@ void do_register_backend(std::string const & name, std::string const & shared_ob
     //   - file named libsoci_NAME.so.SOVERSION is searched in the list of search paths
 
     soci_handler_t h = 0;
-#ifdef __ANDROID__
-    shared_object = "libsoci_sqlite3.so";
-#endif
     if (shared_object.empty() == false)
     {
         h = DLOPEN(shared_object.c_str());
