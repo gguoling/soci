@@ -204,7 +204,11 @@ void do_register_backend(std::string const & name, std::string const & shared_ob
     else
     {
         // try system paths
+#ifdef __ANDROID__
+	h = DLOPEN("/data/data/org.linphone/lib/libsoci_sqlite3.so");
+#else
         h = DLOPEN(LIBNAME(name).c_str());
+#endif
         if (0 == h)
         {
             // try all search paths
