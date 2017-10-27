@@ -8,7 +8,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 ################################################################################
 # Macros in this module:
-#   
+#
 #   soci_backend
 #     - defines project of a database backend for SOCI library
 #
@@ -55,7 +55,7 @@ macro(soci_backend NAME)
 
     soci_check_package_found(${dep} DEPEND_FOUND)
     if(NOT DEPEND_FOUND)
-      list(APPEND DEPENDS_NOT_FOUND ${dep}) 
+      list(APPEND DEPENDS_NOT_FOUND ${dep})
     else()
       string(TOUPPER "${dep}" DEPU)
       list(APPEND THIS_BACKEND_DEPENDS_INCLUDE_DIRS ${${DEPU}_INCLUDE_DIR})
@@ -105,7 +105,7 @@ macro(soci_backend NAME)
       endif()
       file(GLOB THIS_BACKEND_SOURCES *.cpp)
       set(THIS_BACKEND_HEADERS_VAR SOCI_${NAMEU}_HEADERS)
-      set(${THIS_BACKEND_HEADERS_VAR} ${THIS_BACKEND_HEADERS}) 
+      set(${THIS_BACKEND_HEADERS_VAR} ${THIS_BACKEND_HEADERS})
 
 	  # Group source files for IDE source explorers (e.g. Visual Studio)
       source_group("Header Files" FILES ${THIS_BACKEND_HEADERS})
@@ -116,7 +116,7 @@ macro(soci_backend NAME)
       set(THIS_BACKEND_TARGET ${PROJECTNAMEL}_${NAMEL})
       set(THIS_BACKEND_TARGET_VAR SOCI_${NAMEU}_TARGET)
       set(${THIS_BACKEND_TARGET_VAR} ${THIS_BACKEND_TARGET})
-      
+
       soci_target_output_name(${THIS_BACKEND_TARGET} ${THIS_BACKEND_TARGET_VAR}_OUTPUT_NAME)
 
       set(THIS_BACKEND_TARGET_OUTPUT_NAME ${${THIS_BACKEND_TARGET_VAR}_OUTPUT_NAME})
@@ -181,7 +181,7 @@ macro(soci_backend NAME)
 	  ARCHIVE DESTINATION ${LIBDIR})
       endif()
 
-      if (SOCI_SHARED)
+      if (SOCI_STATIC)
         install(TARGETS ${THIS_BACKEND_TARGET_STATIC}
 	  RUNTIME DESTINATION ${BINDIR}
 	  LIBRARY DESTINATION ${LIBDIR}
@@ -201,7 +201,7 @@ macro(soci_backend NAME)
     boost_report_value(${THIS_BACKEND_TARGET_OUTPUT_NAME_VAR})
     boost_report_value(${THIS_BACKEND_HEADERS_VAR})
 
-    soci_report_directory_property(COMPILE_DEFINITIONS)    
+    soci_report_directory_property(COMPILE_DEFINITIONS)
   endif()
 
   # LOG
@@ -269,7 +269,7 @@ macro(soci_backend_test)
     set(TEST_CONNSTR_VAR ${TEST_FULL_NAME}_CONNSTR)
     set(${TEST_CONNSTR_VAR} ""
       CACHE STRING "Connection string for ${BACKENDU} test")
-    
+
     if(NOT ${TEST_CONNSTR_VAR} AND THIS_TEST_CONNSTR)
       set(${TEST_CONNSTR_VAR} ${THIS_TEST_CONNSTR})
     endif()
@@ -324,7 +324,7 @@ macro(soci_backend_test)
       add_test(${TEST_TARGET_STATIC}
         ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${TEST_TARGET_STATIC}
         ${${TEST_CONNSTR_VAR}})
-    
+
       soci_backend_test_create_vcxproj_user(${TEST_TARGET_STATIC} "\"${${TEST_CONNSTR_VAR}}\"")
     endif(SOCI_STATIC)
 
