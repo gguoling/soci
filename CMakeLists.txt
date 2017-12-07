@@ -205,3 +205,24 @@ configure_file("${CONFIG_FILE_IN}" "${CONFIG_FILE_OUT}")
 
 message(STATUS "")
 
+###############################################################################
+# BC RPM
+###############################################################################
+
+if (NOT CPACK_PACKAGE_NAME)
+	set(CPACK_PACKAGE_NAME "soci")
+ENDIF()
+
+set(CPACK_PACKAGE_VERSION_MAJOR "4")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_IGNORE_FILES
+	"${CMAKE_BINARY_DIR}"
+	"^${PROJECT_SOURCE_DIR}/.git*"
+)
+
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+
+include(CPack)
