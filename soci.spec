@@ -5,7 +5,8 @@
 # case we prefix the entire installation so that we don't break compatibility
 # with the user's libs.
 # To compile with bc prefix, use rpmbuild -ba --with bc [SPEC]
-%define     pkg_name        soci
+%define    pkg_name        %{?_with_bc:bc-soci}%{!?_with_bc:soci}
+%define    _lib_name       soci
 %define    _prefix         /opt/belledonne-communications
 
 # re-define some directories for older RPMBuild versions which don't. This messes up the doc/ dir
@@ -27,7 +28,6 @@ URL:            http://soci.sourceforge.net/
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
-BuildRequires:  cmake
 BuildRequires:  boost-devel
 
 %description
@@ -53,6 +53,7 @@ Summary:        MySQL back-end for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  mysql-devel
+
 
 %description    mysql
 This package contains the MySQL back-end for %{name}, i.e.,
@@ -183,6 +184,12 @@ BuildArch:      noarch
 This package contains the documentation in the HTML format of the %{name}
 library. The documentation is the same as at the %{name} web page.
 
+%if 0%{?rhel} && 0%{?rhel} <= 7
+%global cmake_name cmake3
+%else
+%global cmake_name cmake
+%endif
+
 %prep
 %setup -n %{name}-%{version}
 
@@ -196,19 +203,18 @@ echo "- See the ChangeLog file for more details." >> NEWS
 %build
 
 # -DCMAKE_INSTALL_PREFIX:PATH=$RPM_BUILD_ROOT
-%cmake \
+%{expand:%%%cmake_name} . \
  -DSOCI_TESTS=OFF \
  -DSOCI_EMPTY=OFF \
  -DSOCI_CXX_C11=ON \
- -DSOCI_LIBDIR=lib64 \
- -DWITH_EMPTY=%{?_with_empty:ON}%{?without_empty:OFF} \
- -DWITH_DB2=%{?_with_db2:ON}%{?without_db2:OFF} \
- -DWITH_SQLITE3=%{?_with_sqlite3:ON}%{?without_sqlite3:OFF} \
- -DWITH_POSTGRESQL=%{?_with_postgresql:ON}%{?without_postgresql:OFF} \
- -DWITH_MYSQL=%{?_with_mysql:ON}%{?without_mysql:OFF} \
- -DWITH_ODBC=%{?_with_odbc:ON}%{?without_odbc:OFF} \
- -DWITH_ORACLE=%{?_with_oracle:ON %{?_with_oracle_incdir} %{?_with_oracle_libdir}}%{?without_oracle:OFF} \
- -DWITH_FIREBIRD=%{?_with_firebird:ON}%{?without_firebird:OFF}
+ -DWITH_EMPTY=%{?_with_empty:ON}%{!?_with_empty:OFF} \
+ -DWITH_DB2=%{?_with_db2:ON}%{!?with_db2:OFF} \
+ -DWITH_SQLITE3=%{?_with_sqlite3:ON}%{!?with_sqlite3:OFF} \
+ -DWITH_POSTGRESQL=%{?_with_postgresql:ON}%{!?with_postgresql:OFF} \
+ -DWITH_MYSQL=%{?_with_mysql:ON}%{!?with_mysql:OFF} \
+ -DWITH_ODBC=%{?_with_odbc:ON}%{!?with_odbc:OFF} \
+ -DWITH_ORACLE=%{?_with_oracle:ON %{?_with_oracle_incdir} %{?_with_oracle_libdir}}%{!?with_oracle:OFF} \
+ -DWITH_FIREBIRD=%{?_with_firebird:ON}%{!?with_firebird:OFF}
 make VERBOSE=1 %{?_smp_mflags}
 
 %install
@@ -230,79 +236,79 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/soci/soci-config.h.in
 %files
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_core.so.*
-%{?_with_empty:%{_libdir}/lib%{name}_empty.so.*}
+%{_libdir}/lib%{_lib_name}_core.so.*
+%{?_with_empty:%{_libdir}/lib%{_lib_name}_empty.so.*}
 
 %{?_with_sqlite3:%files sqlite3
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_sqlite3.so.*}
+%{_libdir}/lib%{_lib_name}_sqlite3.so.*}
 
 %{?_with_mysql:%files mysql
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_mysql.so.*}
+%{_libdir}/lib%{_lib_name}_mysql.so.*}
 
 %{?_with_postgresql:%files postgresql
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_postgresql.so.*}
+%{_libdir}/lib%{_lib_name}_postgresql.so.*}
 
 %{?_with_odbc:%files odbc
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_odbc.so.*}
+%{_libdir}/lib%{_lib_name}_odbc.so.*}
 
 %{?_with_oracle:%files oracle
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_libdir}/lib%{name}_oracle.so.*}
+%{_libdir}/lib%{_lib_name}_oracle.so.*}
 
 
 %files devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
 %{_prefix}/cmake/*
-%dir %{_includedir}/%{name}/
-%{_includedir}/%{name}/*.h
-%{?_with_empty:%{_includedir}/%{name}/empty/}
-%{_libdir}/lib%{name}_core.so
-%{?_with_empty:%{_libdir}/lib%{name}_empty.so}
+%dir %{_includedir}/%{_lib_name}/
+%{_includedir}/%{_lib_name}/*.h
+%{?_with_empty:%{_includedir}/%{_lib_name}/empty/}
+%{_libdir}/lib%{_lib_name}_core.so
+%{?_with_empty:%{_libdir}/lib%{_lib_name}_empty.so}
 
 %{?_with_sqlite3:%files sqlite3-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/sqlite3/
-%{_libdir}/lib%{name}_sqlite3.so}
+%dir %{_includedir}/%{_lib_name}
+%{_includedir}/%{_lib_name}/sqlite3/
+%{_libdir}/lib%{_lib_name}_sqlite3.so}
 
 %{?_with_mysql:%files mysql-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/mysql
-%{_libdir}/lib%{name}_mysql.so}
+%dir %{_includedir}/%{_lib_name}
+%{_includedir}/%{_lib_name}/mysql
+%{_libdir}/lib%{_lib_name}_mysql.so}
 
 %{?_with_postgresql:%files postgresql-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/postgresql
-%{_libdir}/lib%{name}_postgresql.so}
+%dir %{_includedir}/%{_lib_name}
+%{_includedir}/%{_lib_name}/postgresql
+%{_libdir}/lib%{_lib_name}_postgresql.so}
 
 %{?_with_odbc:%files odbc-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/odbc/
-%{_libdir}/lib%{name}_odbc.so}
+%dir %{_includedir}/%{_lib_name}
+%{_includedir}/%{_lib_name}/odbc/
+%{_libdir}/lib%{_lib_name}_odbc.so}
 
 %{?_with_oracle:%files oracle-devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%dir %{_includedir}/%{name}
-%{_includedir}/%{name}/oracle
-%{_libdir}/lib%{name}_oracle.so}
+%dir %{_includedir}/%{_lib_name}
+%{_includedir}/%{_lib_name}/oracle
+%{_libdir}/lib%{_lib_name}_oracle.so}
 
 %files doc
 %defattr(-,root,root,-)
