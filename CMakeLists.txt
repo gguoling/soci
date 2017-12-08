@@ -134,6 +134,10 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 # Installation
 ###############################################################################
 
+if(NOT DEFINED SOCI_LIBDIR)
+  set(SOCI_LIBDIR ${CMAKE_INSTALL_LIBDIR})
+endif()
+
 set(BINDIR "bin" CACHE PATH "The directory to install binaries into.")
 set(LIBDIR ${SOCI_LIBDIR} CACHE PATH "The directory to install libraries into.")
 set(DATADIR "share" CACHE PATH "The directory to install data files into.")
