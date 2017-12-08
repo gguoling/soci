@@ -34,6 +34,7 @@ set(CMAKE_MODULE_PATH ${SOCI_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 
 include(SociUtilities)
 include(SociConfig)
+include(GNUInstallDirs)
 
 colormsg(_HIBLUE_ "Configuring SOCI:")
 
@@ -132,14 +133,6 @@ set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 ###############################################################################
 # Installation
 ###############################################################################
-
-if(NOT DEFINED SOCI_LIBDIR)
-  if(APPLE OR CMAKE_SIZEOF_VOID_P EQUAL 4)
-    set(SOCI_LIBDIR "lib")
-  else()
-    set(SOCI_LIBDIR "lib64")
-  endif()
-endif()
 
 set(BINDIR "bin" CACHE PATH "The directory to install binaries into.")
 set(LIBDIR ${SOCI_LIBDIR} CACHE PATH "The directory to install libraries into.")
