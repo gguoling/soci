@@ -38,6 +38,7 @@ soci_version(MAJOR 3 MINOR 2 PATCH 3)
 ###############################################################################
 include(SociSystemInfo)
 include(SociConfig)
+include(GNUInstallDirs)
 
 boost_report_value(SOCI_PLATFORM_NAME)
 boost_report_value(SOCI_COMPILER_NAME)
@@ -73,11 +74,6 @@ include(SociDependencies)
 # Installation
 ###############################################################################
 
-if(APPLE OR ANDROID OR CMAKE_SIZEOF_VOID_P EQUAL 4)
-  set(SOCI_LIBDIR "lib")
-else()
-  set(SOCI_LIBDIR "lib64")
-endif()
 
 set(BINDIR "bin" CACHE PATH "The directory to install binaries into.")
 set(LIBDIR ${SOCI_LIBDIR} CACHE PATH "The directory to install libraries into.")
