@@ -263,7 +263,6 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/soci/soci-config.h.in
 %files devel
 %defattr(-,root,root,-)
 %doc AUTHORS ChangeLog COPYING NEWS README
-%{_prefix}/cmake/*
 %dir %{_includedir}/%{_lib_name}/
 %{_includedir}/%{_lib_name}/*.h
 %{?_with_empty:%{_includedir}/%{_lib_name}/empty/}
@@ -307,7 +306,7 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/soci/soci-config.h.in
 
 %files doc
 %defattr(-,root,root,-)
-%doc AUTHORS ChangeLog COPYING NEWS README docs
+%doc AUTHORS ChangeLog COPYING NEWS README
 
 %changelog
 * Wed Dec 6 2017 erwan.croze <erwan.croze@belledonne.communications.com>
