@@ -103,3 +103,25 @@ include_directories(${SOCI_SOURCE_DIR}/core)
 
 add_subdirectory(core)
 add_subdirectory(backends)
+
+###############################################################################
+# BC RPM
+###############################################################################
+
+if (NOT CPACK_PACKAGE_NAME)
+	set(CPACK_PACKAGE_NAME "soci")
+ENDIF()
+
+set(CPACK_PACKAGE_VERSION_MAJOR "3")
+set(CPACK_PACKAGE_VERSION_MINOR "2")
+set(CPACK_PACKAGE_VERSION_PATCH "3")
+
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_IGNORE_FILES
+	"${CMAKE_BINARY_DIR}"
+	"^${PROJECT_SOURCE_DIR}/.git*"
+)
+
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+
+include(CPack)
