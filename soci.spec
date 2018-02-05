@@ -203,7 +203,7 @@ echo "- See the ChangeLog file for more details." >> NEWS
 %build
 
 # -DCMAKE_INSTALL_PREFIX:PATH=$RPM_BUILD_ROOT
-%cmake \
+%{expand:%%%cmake_name} . \
  -DSOCI_TESTS=OFF \
  -DSOCI_EMPTY=OFF \
  -DSOCI_CXX_C11=ON \
