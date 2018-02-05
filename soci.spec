@@ -185,6 +185,12 @@ BuildArch:      noarch
 This package contains the documentation in the HTML format of the %{name}
 library. The documentation is the same as at the %{name} web page.
 
+%if 0%{?rhel} && 0%{?rhel} <= 7
+%global cmake_name cmake3
+%else
+%global cmake_name cmake
+%endif
+
 %prep
 %setup -n %{name}-%{version}
 
