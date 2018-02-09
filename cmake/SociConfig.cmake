@@ -33,14 +33,6 @@ if(NOT DEFINED LIB_SUFFIX)
 endif()
 
 #
-# C++11 Option
-#
-
-if(NOT SOCI_CXX_C11)
-  set (SOCI_CXX_C11 OFF CACHE BOOL "Build to the C++11 standard")
-endif()
-
-#
 # Force compilation flags and set desired warnings level
 #
 
@@ -61,12 +53,7 @@ else()
   set(SOCI_GCC_CLANG_COMMON_FLAGS
     "-pedantic -Werror -Wno-error=parentheses -Wall -Wextra -Wpointer-arith -Wcast-align -Wcast-qual -Wfloat-equal -Woverloaded-virtual -Wredundant-decls -Wno-long-long")
 
-
-  if (SOCI_CXX_C11)
-    set(SOCI_CXX_VERSION_FLAGS "-std=c++11")
-  else()
-    set(SOCI_CXX_VERSION_FLAGS "-std=gnu++98")
-  endif()
+  set(SOCI_CXX_VERSION_FLAGS "-std=c++11")
 
   if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER}" MATCHES "clang")
 
@@ -74,9 +61,6 @@ else()
       set(SOCI_GCC_CLANG_COMMON_FLAGS "${SOCI_GCC_CLANG_COMMON_FLAGS} -fsanitize=address")
     endif()
 
-    # enforce C++11 for Clang
-    set(SOCI_CXX_C11 ON)
-    set(SOCI_CXX_VERSION_FLAGS "-std=c++11")
     add_definitions(-DCATCH_CONFIG_CPP11_NO_IS_ENUM)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SOCI_GCC_CLANG_COMMON_FLAGS} ${SOCI_CXX_VERSION_FLAGS}")
@@ -103,4 +87,4 @@ else()
 endif()
 
 # Set SOCI_HAVE_* variables for soci-config.h generator
-set(SOCI_HAVE_CXX_C11 ${SOCI_CXX_C11} CACHE INTERNAL "Enables C++11 support")
+set(SOCI_HAVE_CXX_C11 ON CACHE INTERNAL "Enables C++11 support")
