@@ -50,7 +50,7 @@ public:
               throw e;
             }
             catch (...) {
-              std::cerr << "Generic handled exception. Can be a buggy impl." << std::endl;
+              // Generic handled exception. Can be a buggy impl.
               throw;
             }
         }
