@@ -35,8 +35,6 @@ public:
     {
         if (--refCount_ == 0)
         {
-            std::unique_ptr<ref_counted_statement_base> deleter(this);
-
             try
             {
                 if (tail_.empty() == false)
@@ -46,13 +44,13 @@ public:
 
                 final_action();
             }
-            catch (const std::exception &e) {
-              throw e;
+            catch (...)
+            {
+                delete this;
+                throw;
             }
-            catch (...) {
-              // Generic handled exception. Can be a buggy impl.
-              throw;
-            }
+
+            delete this;
         }
     }
 
