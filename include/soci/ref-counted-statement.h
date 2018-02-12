@@ -35,6 +35,10 @@ public:
     {
         if (--refCount_ == 0)
         {
+            std::unique_ptr<ref_counted_statement_base> deleter(this);
+            if (std::uncaught_exception())
+                return;
+
             try
             {
                 if (tail_.empty() == false)
@@ -46,11 +50,8 @@ public:
             }
             catch (...)
             {
-                delete this;
                 throw;
             }
-
-            delete this;
         }
     }
 
