@@ -5,6 +5,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <iostream>
+
 #define SOCI_SOURCE
 #include "soci/transaction.h"
 #include "soci/error.h"
@@ -25,8 +27,14 @@ transaction::~transaction()
         {
             rollback();
         }
+        catch (const std::exception &e)
+        {
+            std::cerr << "[SOCI ERROR]Unhandled exception in soci::transaction destructor: " << e.what() << std::endl;
+        }
         catch (...)
-        {}
+        {
+          std::cerr << "[SOCI ERROR]Unhandled generic exception in soci::transaction destructor." << std::endl;
+        }
     }
 }
 
