@@ -93,7 +93,7 @@ List of variables to control common SOCI features and dependencies:
 
 #### Empty (sample backend)
 
-* `SOCI_EMPTY` - boolean - Builds the [sample backend](backends/index.md) called Empty. Always ON by default.
+* `SOCI_EMPTY` - boolean - Builds the [sample backend](backends/index.md) called Empty. Always OFF by default.
 * `SOCI_EMPTY_TEST_CONNSTR` - string - Connection string used to run regression tests of the Empty backend. It is a dummy value. Example: `-DSOCI_EMPTY_TEST_CONNSTR="dummy connection"`
 
 #### IBM DB2

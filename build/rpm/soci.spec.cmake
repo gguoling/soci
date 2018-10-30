@@ -1,34 +1,47 @@
 # -*- rpm-spec -*-
 
-## rpmbuild options
-# These 2 lines are here because we can build the RPM for flexisip, in which
-# case we prefix the entire installation so that we don't break compatibility
-# with the user's libs.
-# To compile with bc prefix, use rpmbuild -ba --with bc [SPEC]
-%define    pkg_name        %{?_with_bc:bc-soci}%{!?_with_bc:soci}
-%define    _lib_name       soci
-%define    _prefix         /opt/belledonne-communications
-
-# re-define some directories for older RPMBuild versions which don't. This messes up the doc/ dir
-# taken from https://fedoraproject.org/wiki/Packaging:RPMMacros?rd=Packaging/RPMMacros
-%define _datarootdir       %{_prefix}/share
-%define _datadir           %{_datarootdir}
-%define _docdir            %{_datadir}/docs
+%define _prefix    @CMAKE_INSTALL_PREFIX@
+%define pkg_prefix @BC_PACKAGE_NAME_PREFIX@
 
 %define build_number 1
 
-Name:           %{pkg_name}
-Version:        4.0.0
+%define _lib_name soci
+
+%define _is_set() %1 == "YES" || %1 == "ON" || %1 == "TRUE" || %1 == "1" || %1 == "Y"
+
+%if %{_is_set "@WITH_DB2@"}
+  %define _with_db2 1
+%endif
+%if %{_is_set "@WITH_FIREBIRD@"}
+  %define _with_firebird 1
+%endif
+%if %{_is_set "@WITH_MYSQL@"}
+  %define _with_mysql 1
+%endif
+%if %{_is_set "@WITH_ODBC@"}
+  %define _with_odbc 1
+%endif
+%if %{_is_set "@WITH_ORACLE@"}
+  %define _with_oracle 1
+%endif
+%if %{_is_set "@WITH_POSTGRESQL@"}
+  %define _with_postgresql 1
+%endif
+%if %{_is_set "@WITH_SQLITE3@"}
+  %define _with_sqlite3 1
+%endif
+
+Name:           @CPACK_PACKAGE_NAME@
+Version:        @PROJECT_VERSION@
 Release:        %{build_number}%{?dist}
 Summary:        The database access library for C++ programmers
+
 
 Group:          System Environment/Libraries
 License:        Boost
 URL:            http://soci.sourceforge.net/
 Source0:        %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
-
-BuildRequires:  boost-devel
 
 %description
 %{name} is a C++ database access library that provides the
@@ -48,18 +61,19 @@ dynamic library specific to the SQLite3 database. If you would like to
 use %{name} in your programs with SQLite3, you will need to
 install %{name}-sqlite3.}
 
+
 %{?_with_mysql:%package        mysql
 Summary:        MySQL back-end for %{name}
 Group:          System Environment/Libraries
 Requires:       %{name}%{?_isa} = %{version}-%{release}
 BuildRequires:  mysql-devel
 
-
 %description    mysql
 This package contains the MySQL back-end for %{name}, i.e.,
 dynamic library specific to the MySQL database. If you would like to
 use %{name} in your programs with MySQL, you will need to
 install %{name}-mysql.}
+
 
 %{?_with_postgresql:%package        postgresql
 Summary:        PostGreSQL back-end for %{name}
@@ -73,6 +87,7 @@ dynamic library specific to the PostGreSQL database. If you would like
 to use %{name} in your programs with PostGreSQL, you will need to
 install %{name}-postgresql.}
 
+
 %{?_with_odbc:%package        odbc
 Summary:        ODBC back-end for %{name}
 Group:          System Environment/Libraries
@@ -85,6 +100,7 @@ dynamic library specific to the ODBC connectors. If you would like to
 use %{name} in your programs with ODBC, you will need to
 install %{name}-odbc.}
 
+
 %{?_with_oracle:%package        oracle
 Summary:        Oracle back-end for %{name}
 Group:          System Environment/Libraries
@@ -96,6 +112,7 @@ dynamic library specific to the Oracle database. If you would like to
 use %{name} in your programs with Oracle, you will need to install
 %{name}-oracle.}
 
+
 %package        devel
 Summary:        Header files, libraries and development documentation for %{name}
 Group:          Development/Libraries
@@ -106,6 +123,7 @@ Requires:       pkgconfig
 This package contains the header files, dynamic libraries and
 development documentation for %{name}. If you would like to develop
 programs using %{name}, you will need to install %{name}-devel.
+
 
 %{?_with_sqlite3:%package        sqlite3-devel
 Summary:        SQLite3 back-end for %{name}
@@ -120,6 +138,7 @@ files and dynamic libraries specific to the SQLite3 database. If you
 would like to develop programs using %{name} and SQLite3, you will need
 to install %{name}-sqlite3.}
 
+
 %{?_with_mysql:%package        mysql-devel
 Summary:        MySQL back-end for %{name}
 Group:          Development/Libraries
@@ -132,6 +151,7 @@ This package contains the MySQL back-end for %{name}, i.e., header
 files and dynamic libraries specific to the MySQL database. If you
 would like to develop programs using %{name} and MySQL, you will need
 to install %{name}-mysql.}
+
 
 %{?_with_postgresql:%package        postgresql-devel
 Summary:        PostGreSQL back-end for %{name}
@@ -146,6 +166,7 @@ files and dynamic libraries specific to the PostGreSQL database. If
 you would like to develop programs using %{name} and PostGreSQL, you
 will need to install %{name}-postgresql.}
 
+
 %{?_with_odbc:%package        odbc-devel
 Summary:        ODBC back-end for %{name}
 Group:          Development/Libraries
@@ -159,6 +180,7 @@ files and dynamic libraries specific to the Odbc database. If you
 would like to develop programs using %{name} and Odbc, you will need
 to install %{name}-odbc.}
 
+
 %{?_with_oracle:%package        oracle-devel
 Summary:        Oracle back-end for %{name}
 Group:          Development/Libraries
@@ -170,6 +192,7 @@ This package contains the Oracle back-end for %{name}, i.e., header
 files and dynamic libraries specific to the Oracle database. If you
 would like to develop programs using %{name} and Oracle, you will need
 to install %{name}-oracle.}
+
 
 %package        doc
 Summary:        HTML documentation for the %{name} library
@@ -184,6 +207,7 @@ BuildArch:      noarch
 This package contains the documentation in the HTML format of the %{name}
 library. The documentation is the same as at the %{name} web page.
 
+
 %if 0%{?rhel} && 0%{?rhel} <= 7
 %global cmake_name cmake3
 %else
@@ -195,43 +219,44 @@ library. The documentation is the same as at the %{name} web page.
 
 mv README.md README
 mv CHANGES ChangeLog
-mv LICENSE_1_0.txt COPYING
 echo "2017-12-06:" > NEWS
 echo "- Version 4.0.0" >> NEWS
 echo "- See the ChangeLog file for more details." >> NEWS
 
 %build
-
-# -DCMAKE_INSTALL_PREFIX:PATH=$RPM_BUILD_ROOT
 %{expand:%%%cmake_name} . \
- -DSOCI_TESTS=OFF \
- -DSOCI_EMPTY=OFF \
- -DSOCI_CXX_C11=ON \
- -DWITH_EMPTY=%{?_with_empty:ON}%{!?_with_empty:OFF} \
- -DWITH_DB2=%{?_with_db2:ON}%{!?with_db2:OFF} \
- -DWITH_SQLITE3=%{?_with_sqlite3:ON}%{!?with_sqlite3:OFF} \
- -DWITH_POSTGRESQL=%{?_with_postgresql:ON}%{!?with_postgresql:OFF} \
- -DWITH_MYSQL=%{?_with_mysql:ON}%{!?with_mysql:OFF} \
- -DWITH_ODBC=%{?_with_odbc:ON}%{!?with_odbc:OFF} \
- -DWITH_ORACLE=%{?_with_oracle:ON %{?_with_oracle_incdir} %{?_with_oracle_libdir}}%{!?with_oracle:OFF} \
- -DWITH_FIREBIRD=%{?_with_firebird:ON}%{!?with_firebird:OFF}
-make VERBOSE=1 %{?_smp_mflags}
+  -DCMAKE_BUILD_TYPE=@CMAKE_BUILD_TYPE@ \
+  -DCMAKE_INSTALL_LIBDIR:PATH=%{_libdir} \
+  -DCMAKE_PREFIX_PATH:PATH=%{_prefix} \
+  -DSOCI_CXX_C11=ON \
+  -DSOCI_EMPTY=OFF \
+  -DSOCI_TESTS=OFF \
+  -DWITH_DB2=@WITH_DB2@ \
+  -DWITH_FIREBIRD=@WITH_FIREBIRD@ \
+  -DWITH_MYSQL=@WITH_MYSQL@ \
+  -DWITH_ODBC=@WITH_ODBC@ \
+  -DWITH_ORACLE=@WITH_ORACLE@ \
+  -DWITH_POSTGRESQL=@WITH_POSTGRESQL@ \
+  -DWITH_SQLITE3=@WITH_SQLITE3@
+make %{?_smp_mflags}
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
-##
+make install DESTDIR=%{buildroot}
 #  Remove unpackaged files from the buildroot
 rm -f $RPM_BUILD_ROOT%{_libdir}/*.a
 rm -f $RPM_BUILD_ROOT%{_includedir}/soci/soci-config.h.in
-%{!?_with_empty:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/empty}
+rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/empty
+
 %{!?_with_db2:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/db2}
-%{!?_with_sqlite3:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/sqlite3}
-%{!?_with_postgresql:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/postgresql}
+%{!?_with_firebird:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/firebird}
 %{!?_with_mysql:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/mysql}
 %{!?_with_odbc:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/odbc}
 %{!?_with_oracle:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/oracle}
-%{!?_with_firebird:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/firebird}
+%{!?_with_postgresql:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/postgresql}
+%{!?_with_sqlite3:rm -rf $RPM_BUILD_ROOT%{_includedir}/soci/sqlite3}
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
@@ -315,5 +340,8 @@ rm -f $RPM_BUILD_ROOT%{_includedir}/soci/soci-config.h.in
 %doc AUTHORS ChangeLog COPYING NEWS README docs
 
 %changelog
+* Tue Oct 30 2018 ronan.abhamon <ronan.abhamon@belledonne-communications.com>
+- Use CPack.
+
 * Wed Dec 6 2017 erwan.croze <erwan.croze@belledonne.communications.com>
 - Initial RPM release.

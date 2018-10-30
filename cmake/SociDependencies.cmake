@@ -19,10 +19,6 @@
 #
 # List of SOCI dependncies
 #
-set(SOCI_CORE_DEPENDENCIES
-  Threads
-  Boost)
-
 set(SOCI_BACKENDS_DB_DEPENDENCIES
   MySQL
   ODBC
@@ -30,11 +26,8 @@ set(SOCI_BACKENDS_DB_DEPENDENCIES
   PostgreSQL
   SQLite3
   Firebird
-  DB2)
-
-set(SOCI_ALL_DEPENDENCIES
-  ${SOCI_CORE_DEPENDENCIES}
-  ${SOCI_BACKENDS_DB_DEPENDENCIES})
+  DB2
+)
 
 #
 # Perform checks
@@ -71,9 +64,11 @@ option(WITH_VALGRIND "Run tests under valgrind" OFF)
 #
 # Detect available dependencies
 #
-foreach(external ${SOCI_ALL_DEPENDENCIES})
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies/Threads.cmake)
+
+foreach(external ${SOCI_BACKENDS_DB_DEPENDENCIES})
   string(TOUPPER "${external}" EXTERNAL)
-  option(WITH_${EXTERNAL} "Attempt to find and configure ${external}" ON)
+  option(WITH_${EXTERNAL} "Attempt to find and configure ${external}" OFF)
   if(WITH_${EXTERNAL})
     colormsg(HICYAN "${external}:")
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/dependencies/${external}.cmake)
