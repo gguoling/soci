@@ -27,8 +27,8 @@ endforeach()
 # get all files in backends
 file(GLOB backend_dirs RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *)
 
-# empty backend always on by default
-option(SOCI_EMPTY "Build empty backend" ON)
+# empty backend always off by default
+option(SOCI_EMPTY "Build empty backend" OFF)
 if(SOCI_EMPTY)
 	set(WITH_EMPTY ON)
 	set(EMPTY_FOUND ON)
