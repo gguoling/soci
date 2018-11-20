@@ -51,7 +51,7 @@ if (MSVC)
 else()
 
   set(SOCI_GCC_CLANG_COMMON_FLAGS
-    "-pedantic -Werror -Wno-error=parentheses -Wall -Wextra -Wpointer-arith -Wcast-align -Wcast-qual -Wfloat-equal -Woverloaded-virtual -Wredundant-decls -Wno-long-long")
+    "-pedantic -Wno-error=parentheses -Wall -Wextra -Wpointer-arith -Wcast-align -Wcast-qual -Wfloat-equal -Woverloaded-virtual -Wredundant-decls -Wno-long-long")
 
   set(SOCI_CXX_VERSION_FLAGS "-std=c++11")
 
