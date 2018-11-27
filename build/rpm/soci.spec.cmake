@@ -226,7 +226,6 @@ echo "- See the ChangeLog file for more details." >> NEWS
 %build
 %{expand:%%%cmake_name} . \
   -DCMAKE_BUILD_TYPE=@CMAKE_BUILD_TYPE@ \
-  -DCMAKE_INSTALL_LIBDIR:PATH=%{_libdir} \
   -DCMAKE_PREFIX_PATH:PATH=%{_prefix} \
   -DSOCI_CXX_C11=ON \
   -DSOCI_EMPTY=OFF \
@@ -340,6 +339,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog COPYING NEWS README docs
 
 %changelog
+
+* Tue Nov 27 2018 ronan.abhamon <ronan.abhamon@belledonne-communications.com>
+- Do not set CMAKE_INSTALL_LIBDIR and never with _libdir!
+
 * Tue Oct 30 2018 ronan.abhamon <ronan.abhamon@belledonne-communications.com>
 - Use CPack.
 
