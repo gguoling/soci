@@ -3,6 +3,7 @@
 *.kate-swp
 tags
 tmp
+soci.spec
 
 # Build directories
 /*site*
