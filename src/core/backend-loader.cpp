@@ -33,10 +33,26 @@ typedef HMODULE soci_handler_t;
 #define UNLOCK(x) LeaveCriticalSection(x)
 #define MUTEX_INIT(x) InitializeCriticalSection(x)
 #define MUTEX_DEST(x) DeleteCriticalSection(x)
+#ifdef IS_UWP
+
+static soci_handler_t uwp_dlopen(const char *input) {
+    soci_handler_t h = 0;
+    int lenA = strlen(input);
+    int lenW = MultiByteToWideChar(CP_ACP, 0, input, lenA, NULL, 0);
+    if (lenW > 0) {
+        wchar_t *output = new wchar_t[lenW];
+        MultiByteToWideChar(CP_ACP, 0, input, lenA, output, lenW);
+        h = LoadPackagedLibrary(output, 0);
+    }
+    return h;
+}
+#define DLOPEN(x) uwp_dlopen(x)
+#else
 #ifdef _UNICODE
 #define DLOPEN(x) LoadLibraryA(x)
 #else
 #define DLOPEN(x) LoadLibrary(x)
+#endif
 #endif
 #define DLCLOSE(x) FreeLibrary(x)
 #define DLSYM(x, y) GetProcAddress(x, y)
@@ -103,6 +119,9 @@ std::vector<std::string> get_default_paths()
 {
     std::vector<std::string> paths;
 
+#ifdef IS_UWP
+    char const* const penv = 0;
+#else
     // TODO: may be problem with finding getenv in std namespace in Visual C++ --mloskot
     char const* const penv = std::getenv("SOCI_BACKENDS_PATH");
     if (0 == penv)
@@ -111,6 +130,7 @@ std::vector<std::string> get_default_paths()
         paths.push_back(DEFAULT_BACKENDS_PATH);
         return paths;
     }
+#endif
 
     std::string const env = penv;
     if (env.empty())

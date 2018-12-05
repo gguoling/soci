@@ -13,4 +13,6 @@
 //
 @CONFIGURED_VARIABLES@
 
+#cmakedefine IS_UWP 1
+
 #endif // SOCICONFIG_H_INCLUDED

@@ -151,6 +151,11 @@ install(DIRECTORY ${CONFIG_INCLUDE_DIR}/soci DESTINATION ${INCLUDEDIR})
 set(CONFIG_FILE_IN "include/soci/soci-config.h.in")
 set(CONFIG_FILE_OUT "${CONFIG_INCLUDE_DIR}/soci/soci-config.h")
 
+if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+  set(IS_UWP 1)
+  add_definitions("-D_WIN32_WINNT=0x0A00")
+endif()
+
 
 
 ###############################################################################
