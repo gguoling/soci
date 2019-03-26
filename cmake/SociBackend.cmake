@@ -167,6 +167,17 @@ macro(soci_backend NAME)
             PROPERTIES
             OUTPUT_NAME ${THIS_BACKEND_OUTPUT_NAME}
             DEFINE_SYMBOL SOCI_DLL)
+        elseif(APPLE)
+          if(IOS)
+            set(MIN_OS ${LINPHONE_IOS_DEPLOYMENT_TARGET})
+          else()
+            set(MIN_OS ${CMAKE_OSX_DEPLOYMENT_TARGET})
+          endif()
+            set_target_properties(${THIS_BACKEND_TARGET} PROPERTIES
+              FRAMEWORK TRUE
+              MACOSX_FRAMEWORK_IDENTIFIER org.linphone.${SOCI_BACKEND_SQLITE3}
+              MACOSX_FRAMEWORK_INFO_PLIST "${CMAKE_SOURCE_DIR}/build/osx/Info.plist.in"
+              PUBLIC_HEADER "${THIS_BACKEND_HEADERS}")
         else()
           set_target_properties(${THIS_BACKEND_TARGET}
             PROPERTIES
@@ -213,11 +224,22 @@ macro(soci_backend NAME)
         ${INCLUDEDIR}/${PROJECTNAMEL}/${NAMEL})
 
       if (SOCI_SHARED)
-        install(TARGETS ${THIS_BACKEND_TARGET}
-          EXPORT SOCI
-          RUNTIME DESTINATION ${BINDIR}
-          LIBRARY DESTINATION ${LIBDIR}
-          ARCHIVE DESTINATION ${LIBDIR})
+        if(APPLE)
+          install(TARGETS ${THIS_BACKEND_TARGET}
+            EXPORT SOCI
+            RUNTIME DESTINATION ${BINDIR}
+            LIBRARY DESTINATION ${LIBDIR}
+            ARCHIVE DESTINATION ${LIBDIR}
+            FRAMEWORK DESTINATION Frameworks
+            PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+            COMPONENT core)
+        else()
+          install(TARGETS ${THIS_BACKEND_TARGET}
+            EXPORT SOCI
+            RUNTIME DESTINATION ${BINDIR}
+            LIBRARY DESTINATION ${LIBDIR}
+            ARCHIVE DESTINATION ${LIBDIR})
+        endif()
       endif()
 
       if (SOCI_STATIC)
