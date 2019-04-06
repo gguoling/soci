@@ -228,6 +228,7 @@ echo "- See the ChangeLog file for more details." >> NEWS
   -DCMAKE_BUILD_TYPE=@CMAKE_BUILD_TYPE@ \
   -DCMAKE_PREFIX_PATH:PATH=%{_prefix} \
   -DSOCI_CXX_C11=ON \
+  -DSOCI_SHARED=ON \
   -DSOCI_EMPTY=OFF \
   -DSOCI_TESTS=OFF \
   -DWITH_DB2=@WITH_DB2@ \
