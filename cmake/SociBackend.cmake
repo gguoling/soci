@@ -167,7 +167,7 @@ macro(soci_backend NAME)
             PROPERTIES
             OUTPUT_NAME ${THIS_BACKEND_OUTPUT_NAME}
             DEFINE_SYMBOL SOCI_DLL)
-        elseif(APPLE)
+        elseif(SOCI_FRAMEWORK)
           if(IOS)
             set(MIN_OS ${LINPHONE_IOS_DEPLOYMENT_TARGET})
           else()
@@ -184,7 +184,7 @@ macro(soci_backend NAME)
             SOVERSION ${${PROJECT_NAME}_SOVERSION}
             INSTALL_NAME_DIR ${CMAKE_INSTALL_PREFIX}/lib)
 
-          if(APPLE)
+          if(SOCI_FRAMEWORK)
             set_target_properties(${THIS_BACKEND_TARGET}
               PROPERTIES
               LINK_FLAGS "-Wl,-flat_namespace -Wl,-undefined -Wl,suppress")

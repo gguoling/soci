@@ -18,9 +18,11 @@ project(SOCI VERSION 4.0.0 LANGUAGES C CXX)
 ###############################################################################
 # Build features and variants
 ##############################################################################
-
 option(SOCI_SHARED "Enable build of shared libraries" OFF)
 option(SOCI_STATIC "Enable build of static libraries" ON)
+if (APPLE)
+	option(SOCI_FRAMEWORK "Enable build of APPLE framework" ON)
+endif()
 option(SOCI_TESTS "Enable build of collection of SOCI tests" ON)
 option(SOCI_ASAN "Enable address sanitizer on GCC v4.8+/Clang v 3.1+" OFF)
 
@@ -52,6 +54,7 @@ soci_version()
 
 boost_report_value(SOCI_SHARED)
 boost_report_value(SOCI_STATIC)
+boost_report_value(SOCI_FRAMEWORK)
 boost_report_value(SOCI_TESTS)
 boost_report_value(SOCI_ASAN)
 
