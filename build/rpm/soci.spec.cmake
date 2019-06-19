@@ -3,7 +3,7 @@
 %define _prefix    @CMAKE_INSTALL_PREFIX@
 %define pkg_prefix @BC_PACKAGE_NAME_PREFIX@
 
-%define build_number 3
+%define build_number 4
 
 %define _lib_name soci
 
