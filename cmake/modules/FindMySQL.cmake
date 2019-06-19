@@ -87,7 +87,7 @@ else(WIN32)
       PATH_SUFFIXES
       mysql
    )
-   find_library(MYSQL_LIBRARIES NAMES mysqlclient
+   find_library(MYSQL_LIBRARIES NAMES mysqlclient mariadbclient
       PATHS
       ${MYSQL_LIB_PATHS}
    )
