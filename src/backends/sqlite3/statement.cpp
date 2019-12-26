@@ -17,6 +17,9 @@
 
 #ifdef _MSC_VER
 #pragma warning(disable:4355)
+#else
+// TODO ptr_fun is deprecated
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif
 
 using namespace soci;
