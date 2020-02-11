@@ -175,7 +175,7 @@ macro(soci_backend NAME)
           endif()
             set_target_properties(${THIS_BACKEND_TARGET} PROPERTIES
               FRAMEWORK TRUE
-              MACOSX_FRAMEWORK_IDENTIFIER org.linphone.${SOCI_BACKEND_SQLITE3}
+              MACOSX_FRAMEWORK_IDENTIFIER org.linphone.soci.${NAMEL}
               MACOSX_FRAMEWORK_INFO_PLIST "${CMAKE_SOURCE_DIR}/build/osx/Info.plist.in"
               PUBLIC_HEADER "${THIS_BACKEND_HEADERS}")
         else()

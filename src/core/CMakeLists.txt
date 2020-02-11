@@ -60,7 +60,7 @@ if (SOCI_SHARED)
     endif()
     set_target_properties(${SOCI_CORE_TARGET} PROPERTIES
     	FRAMEWORK TRUE
-      MACOSX_FRAMEWORK_IDENTIFIER org.linphone.soci_core
+      MACOSX_FRAMEWORK_IDENTIFIER org.linphone.soci.core
       MACOSX_FRAMEWORK_INFO_PLIST "${CMAKE_SOURCE_DIR}/build/osx/Info.plist.in"
       PUBLIC_HEADER "${SOCI_CORE_HEADERS}")
   else()
